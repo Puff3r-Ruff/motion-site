@@ -10210,29 +10210,11 @@ h6,
     align-items: center;
     position: fixed;
     bottom: 50px;
-    left: 45%;
+    left: 50%;
+    transform: translate(-22%, -50%);
     z-index: 9999;
+    width: 50vh;
   }
- @media (max-width: 600.98px) {
-  .editor-controls {
-    display: flow;
-    align-items: center;
-    position: fixed;
-    bottom: 50px;
-    left: 35%;
-    z-index: 9999;
-  }
-}
-@media (max-width: 300.98px) {
-  .editor-controls {
-    display: flow;
-    align-items: center;
-    position: fixed;
-    bottom: 50px;
-    left: 20%;
-    z-index: 9999;
-  }
-}
   .editor-controls button {
     padding: 8px 14px;
     border-radius: 6px;
@@ -10241,6 +10223,7 @@ h6,
     color: #111;
     font-weight: 600;
     cursor: pointer;
+    margin-right: 20px;
   }
 
   .editor-controls button.cancel {
@@ -10273,15 +10256,34 @@ h6,
 
   .editor-hint {
     position: fixed;
-    bottom: 18px;
+    bottom: 150px;
     left: 50%;
     transform: translateX(-50%);
-    color: #fff;
-    font-size: 13px;
+    color: rgb(0 0 0);
+    font-size: 20px;
     opacity: 0.9;
+    font-weight: bold;
     pointer-events: none;
+    background: white;
+    z-index: 99999;
+    content: "and Scroll or use slider to zoom";
   }
-
+@media (max-width: 768px) {
+    .editor-hint {
+    position: fixed;
+    bottom: 150px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgb(0 0 0);
+    font-size: 20px;
+    opacity: 0.9;
+    font-weight: bold;
+    pointer-events: none;
+    background: white;
+    z-index: 99999;
+    content: "and Pinch to zoom";
+  }
+  }
 .resize-nw { top: -10px; left: -10px; cursor: nwse-resize; }
 .resize-ne { top: -10px; right: -10px; cursor: nesw-resize; }
 .resize-sw { bottom: -10px; left: -10px; cursor: nesw-resize; }
