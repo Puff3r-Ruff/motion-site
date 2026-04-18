@@ -203,23 +203,32 @@
   let cartTotal = 0;
 
   // ---------------------------------------------------------
-  // LOAD PRODUCTS FROM YOUR VERCEL API (GitHub-backed)
+  // LOAD PRODUCTS DIRECTLY FROM GITHUB REPO
   // ---------------------------------------------------------
   async function loadProducts() {
     const url = new URL(window.location.href);
-    const connectId = url.searchParams.get("connectId");
     const repo = url.searchParams.get("repo");
+    const user = url.searchParams.get("user"); // GitHub username
+    const connectId = url.searchParams.get("connectId");
 
-    const res = await fetch("https://www.ideago.ie/api/products/load", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ connectId, repo })
-    });
+    if (!repo || !user) {
+      alert("Missing repo or user in URL");
+      return;
+    }
 
+    const jsonUrl = `https://raw.githubusercontent.com/${user}/${repo}/main/Products/products.json`;
+
+    const res = await fetch(jsonUrl);
     const data = await res.json();
 
     products = data.products || [];
-    images = data.images || {};
+
+    // Load images
+    images = {};
+    for (let i = 0; i < products.length; i++) {
+      const index = i + 1;
+      images[index] = `https://raw.githubusercontent.com/${user}/${repo}/main/Products/images/product-${index}.jpg`;
+    }
 
     renderProducts(products);
   }
@@ -232,7 +241,6 @@
 
     list.forEach((product, index) => {
       const imgSrc = images[index + 1] || "";
-
       const price = product.variants?.[0]?.price || 0;
 
       const card = document.createElement("article");
@@ -261,7 +269,7 @@
   }
 
   // ---------------------------------------------------------
-  // BUY BUTTON → STRIPE CHECKOUT
+  // BUY BUTTON → STRIPE CHECKOUT (Vercel API)
   // ---------------------------------------------------------
   function attachBuyHandlers() {
     document.querySelectorAll(".add-btn").forEach(btn => {
