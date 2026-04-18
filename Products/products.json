@@ -1,0 +1,39 @@
+{
+  "connectId": "acct_1TMnVnRpxXH3zmmL",
+  "products": [
+    {
+      "id": 1,
+      "name": "New Product",
+      "description": "Enter a description...",
+      "basePrice": null,
+      "baseStock": null,
+      "variants": [
+        {
+          "id": "1-1",
+          "name": "S",
+          "price": 10,
+          "stock": 2,
+          "stripePriceId": "price_1TNWzORpxXH3zmmLWzN8t2il"
+        }
+      ],
+      "stripeProductId": "prod_UMFU7tApa1uGRQ"
+    },
+    {
+      "id": 2,
+      "name": "New Product",
+      "description": "Enter a description...",
+      "basePrice": null,
+      "baseStock": null,
+      "variants": [
+        {
+          "id": "2-1",
+          "name": "M",
+          "price": 5,
+          "stock": 2,
+          "stripePriceId": "price_1TNWzORpxXH3zmmLS8WqN4XY"
+        }
+      ],
+      "stripeProductId": "prod_UMFUvY2it3tbsw"
+    }
+  ]
+}
