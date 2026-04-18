@@ -209,7 +209,7 @@
     // Load products.json
     async function loadProducts() {
       try {
-        const res = await fetch("/Products/products.json");
+        const res = await fetch("Products/products.json");
         const data = await res.json();
 
         products = data.products;
