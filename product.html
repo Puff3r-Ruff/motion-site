@@ -119,6 +119,9 @@
     <h1 id="productName"></h1>
     <div class="price" id="productPrice"></div>
     <p id="productDesc"></p>
+    <label for="variantSelect"><strong>Variant:</strong></label>
+    <select id="variantSelect" style="padding:8px; margin:10px 0; width:150px;"></select>
+
   </div>
 
   <!-- RIGHT: BUY BOX -->
@@ -146,14 +149,43 @@ async function loadProduct() {
   const product = data.products.find(p => p.id === id);
   if (!product) return;
 
-  // Fill content
+  // Fill basic info
   document.getElementById("productName").textContent = product.name;
   document.getElementById("productDesc").textContent = product.description;
   document.getElementById("longDesc").textContent = product.description;
 
-  const price = product.variants?.[0]?.price || product.basePrice || 0;
-  document.getElementById("productPrice").textContent = "€" + price.toFixed(2);
-  document.getElementById("buyPrice").textContent = "€" + price.toFixed(2);
+  // Variant dropdown
+  const variantSelect = document.getElementById("variantSelect");
+  variantSelect.innerHTML = "";
+
+  product.variants.forEach(v => {
+    const opt = document.createElement("option");
+    opt.value = v.id;
+    opt.textContent = `${v.name} — €${v.price}`;
+    opt.dataset.price = v.price;
+    opt.dataset.stock = v.stock;
+    opt.dataset.stripe = v.stripePriceId;
+    variantSelect.appendChild(opt);
+  });
+
+  // Set default variant
+  updateVariantDisplay();
+
+  variantSelect.addEventListener("change", updateVariantDisplay);
+
+  function updateVariantDisplay() {
+    const selected = variantSelect.options[variantSelect.selectedIndex];
+
+    const price = parseFloat(selected.dataset.price);
+    const stock = parseInt(selected.dataset.stock);
+
+    document.getElementById("productPrice").textContent = "€" + price.toFixed(2);
+    document.getElementById("buyPrice").textContent = "€" + price.toFixed(2);
+
+    // Disable buy buttons if out of stock
+    document.querySelector(".add-cart").disabled = stock <= 0;
+    document.querySelector(".buy-now").disabled = stock <= 0;
+  }
 
   // Images
   document.getElementById("mainImg").src = product.image;
@@ -161,8 +193,7 @@ async function loadProduct() {
   const thumbContainer = document.getElementById("thumbContainer");
   thumbContainer.innerHTML = "";
 
-  // If you add more images later, push them into an array
-  const images = [product.image];
+  const images = [product.image]; // Expand later if needed
 
   images.forEach(src => {
     const img = document.createElement("img");
