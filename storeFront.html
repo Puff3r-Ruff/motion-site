@@ -89,8 +89,13 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #999;
-      font-size: 14px;
+      overflow: hidden;
+    }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .product-title {
@@ -181,7 +186,7 @@
     </div>
 
     <section class="products-grid" id="products-grid">
-      <!-- Products will be rendered here by JS -->
+      <!-- Products load here -->
     </section>
   </main>
 
@@ -189,148 +194,129 @@
     &copy; <span id="year"></span> My Store. All rights reserved.
   </div>
 
- <script>
-  let products = [];
-  let images = {};
+  <script>
+    let products = [];
+    let cartCount = 0;
+    let cartTotal = 0;
+    let currentProducts = [];
 
-  const productsGrid = document.getElementById("products-grid");
-  const cartCountEl = document.getElementById("cart-count");
-  const cartTotalEl = document.getElementById("cart-total");
-  const searchInput = document.getElementById("search-input");
-  const sortSelect = document.getElementById("sort-select");
+    const productsGrid = document.getElementById("products-grid");
+    const cartCountEl = document.getElementById("cart-count");
+    const cartTotalEl = document.getElementById("cart-total");
+    const searchInput = document.getElementById("search-input");
+    const sortSelect = document.getElementById("sort-select");
 
-  let cartCount = 0;
-  let cartTotal = 0;
-
-  // ---------------------------------------------------------
-  // LOAD PRODUCTS DIRECTLY FROM GITHUB REPO
-  // ---------------------------------------------------------
-  async function loadProducts() {
-    const url = new URL(window.location.href);
-    const repo = url.searchParams.get("repo");
-    const user = url.searchParams.get("user"); // GitHub username
-    const connectId = url.searchParams.get("connectId");
-
-    if (!repo || !user) {
-      alert("Missing repo or user in URL");
-      return;
-    }
-
-    const jsonUrl = `https://raw.githubusercontent.com/${user}/${repo}/main/Products/products.json`;
-
-    const res = await fetch(jsonUrl);
-    const data = await res.json();
-
-    products = data.products || [];
-
-    // Load images
-    images = {};
-    for (let i = 0; i < products.length; i++) {
-      const index = i + 1;
-      images[index] = `https://raw.githubusercontent.com/${user}/${repo}/main/Products/images/product-${index}.jpg`;
-    }
-
-    renderProducts(products);
-  }
-
-  // ---------------------------------------------------------
-  // RENDER PRODUCTS
-  // ---------------------------------------------------------
-  function renderProducts(list) {
-    productsGrid.innerHTML = "";
-
-    list.forEach((product, index) => {
-      const imgSrc = images[index + 1] || "";
-      const price = product.variants?.[0]?.price || 0;
-
-      const card = document.createElement("article");
-      card.className = "product-card";
-      card.setAttribute("data-name", product.name.toLowerCase());
-      card.setAttribute("data-price", price);
-
-      card.innerHTML = `
-        <div class="product-image">
-          <img src="${imgSrc}" style="width:100%; height:150px; object-fit:cover; border-radius:4px;" />
-        </div>
-
-        <div class="product-title">${product.name}</div>
-        <div class="product-desc">${product.description}</div>
-
-        <div class="product-meta">
-          <div class="price">€${price.toFixed(2)}</div>
-          <button class="add-btn" data-index="${index}">Buy</button>
-        </div>
-      `;
-
-      productsGrid.appendChild(card);
-    });
-
-    attachBuyHandlers();
-  }
-
-  // ---------------------------------------------------------
-  // BUY BUTTON → STRIPE CHECKOUT (Vercel API)
-  // ---------------------------------------------------------
-  function attachBuyHandlers() {
-    document.querySelectorAll(".add-btn").forEach(btn => {
-      btn.onclick = async function () {
-        const index = parseInt(this.getAttribute("data-index"), 10);
-        const product = products[index];
-        const variant = product.variants[0];
-
-        const url = new URL(window.location.href);
-        const connectId = url.searchParams.get("connectId");
-
-        const res = await fetch("https://www.ideago.ie/api/checkout/create-session", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            connectId,
-            priceId: variant.stripePriceId
-          })
-        });
-
+    // Load products.json
+    async function loadProducts() {
+      try {
+        const res = await fetch("/Products/products.json");
         const data = await res.json();
 
-        if (data.url) {
-          window.location.href = data.url;
-        } else {
-          alert("Checkout error");
-        }
-      };
-    });
-  }
+        products = data.products;
+        currentProducts = [...products];
 
-  // ---------------------------------------------------------
-  // SEARCH + SORT
-  // ---------------------------------------------------------
-  searchInput.addEventListener("input", () => {
-    const term = searchInput.value.toLowerCase();
-    const filtered = products.filter(p =>
-      p.name.toLowerCase().includes(term) ||
-      p.description.toLowerCase().includes(term)
-    );
-    renderProducts(filtered);
-  });
+        renderProducts(products);
+      } catch (err) {
+        console.error("Error loading products.json:", err);
+      }
+    }
 
-  sortSelect.addEventListener("change", () => {
-    let sorted = [...products];
-    const value = sortSelect.value;
+    function renderProducts(list) {
+      productsGrid.innerHTML = "";
 
-    if (value === "price-asc") sorted.sort((a, b) => a.variants[0].price - b.variants[0].price);
-    if (value === "price-desc") sorted.sort((a, b) => b.variants[0].price - a.variants[0].price);
-    if (value === "name-asc") sorted.sort((a, b) => a.name.localeCompare(b.name));
-    if (value === "name-desc") sorted.sort((a, b) => b.name.localeCompare(a.name));
+      list.forEach(product => {
+        const lowestPrice = product.variants?.length
+          ? product.variants[0].price
+          : product.basePrice || 0;
 
-    renderProducts(sorted);
-  });
+        const card = document.createElement("article");
+        card.className = "product-card";
+        card.setAttribute("data-name", product.name.toLowerCase());
+        card.setAttribute("data-price", lowestPrice);
 
-  // ---------------------------------------------------------
-  // INIT
-  // ---------------------------------------------------------
-  document.getElementById("year").textContent = new Date().getFullYear();
-  loadProducts();
-</script>
+        card.innerHTML = `
+          <div class="product-image">
+            <img src="${product.image}" alt="${product.name}">
+          </div>
+          <div class="product-title">${product.name}</div>
+          <div class="product-desc">${product.description}</div>
+          <div class="product-meta">
+            <div class="price">€${lowestPrice.toFixed(2)}</div>
+            <button class="add-btn" data-id="${product.id}">Add to Cart</button>
+          </div>
+        `;
 
+        productsGrid.appendChild(card);
+      });
+
+      attachAddToCartHandlers();
+    }
+
+    function attachAddToCartHandlers() {
+      const buttons = document.querySelectorAll(".add-btn");
+
+      buttons.forEach(btn => {
+        btn.onclick = function () {
+          const id = parseInt(this.getAttribute("data-id"), 10);
+          const product = products.find(p => p.id === id);
+          if (!product) return;
+
+          const price = product.variants?.[0]?.price || product.basePrice || 0;
+
+          cartCount += 1;
+          cartTotal += price;
+
+          updateCartDisplay();
+        };
+      });
+    }
+
+    function updateCartDisplay() {
+      cartCountEl.textContent = cartCount;
+      cartTotalEl.textContent = cartTotal.toFixed(2);
+    }
+
+    // Search
+    function filterProducts() {
+      const term = searchInput.value.toLowerCase();
+      currentProducts = products.filter(p =>
+        p.name.toLowerCase().includes(term) ||
+        p.description.toLowerCase().includes(term)
+      );
+      applySort();
+    }
+
+    // Sorting
+    function applySort() {
+      const value = sortSelect.value;
+      let sorted = [...currentProducts];
+
+      if (value === "price-asc") {
+        sorted.sort((a, b) => {
+          const pa = a.variants?.[0]?.price || a.basePrice || 0;
+          const pb = b.variants?.[0]?.price || b.basePrice || 0;
+          return pa - pb;
+        });
+      } else if (value === "price-desc") {
+        sorted.sort((a, b) => {
+          const pa = a.variants?.[0]?.price || a.basePrice || 0;
+          const pb = b.variants?.[0]?.price || b.basePrice || 0;
+          return pb - pa;
+        });
+      } else if (value === "name-asc") {
+        sorted.sort((a, b) => a.name.localeCompare(b.name));
+      } else if (value === "name-desc") {
+        sorted.sort((a, b) => b.name.localeCompare(a.name));
+      }
+
+      renderProducts(sorted);
+    }
+
+    searchInput.addEventListener("input", filterProducts);
+    sortSelect.addEventListener("change", applySort);
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+    loadProducts();
+  </script>
 </body>
 </html>
