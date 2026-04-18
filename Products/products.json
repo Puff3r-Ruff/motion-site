@@ -16,7 +16,8 @@
           "stripePriceId": "price_1TNWzORpxXH3zmmLWzN8t2il"
         }
       ],
-      "stripeProductId": "prod_UMFU7tApa1uGRQ"
+      "stripeProductId": "prod_UMFU7tApa1uGRQ",
+      "image": "Products/images/product-1.jpg"
     },
     {
       "id": 2,
@@ -33,7 +34,8 @@
           "stripePriceId": "price_1TNWzORpxXH3zmmLS8WqN4XY"
         }
       ],
-      "stripeProductId": "prod_UMFUvY2it3tbsw"
+      "stripeProductId": "prod_UMFUvY2it3tbsw",
+      "image": "Products/images/product-2.jpg"
     }
   ]
 }
