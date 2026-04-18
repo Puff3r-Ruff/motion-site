@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Product Page</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: #f5f5f5;
+  }
+
+  .page {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+    display: flex;
+    gap: 20px;
+  }
+
+  .gallery {
+    flex: 1;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+  }
+
+  .main-img {
+    width: 100%;
+    height: 450px;
+    object-fit: cover;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+
+  .thumbs {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .thumbs img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .info {
+    flex: 1.2;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+  }
+
+  .info h1 {
+    margin: 0;
+    font-size: 26px;
+  }
+
+  .price {
+    font-size: 28px;
+    color: #b12704;
+    margin: 10px 0;
+  }
+
+  .buy-box {
+    width: 280px;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    height: fit-content;
+    border: 1px solid #ddd;
+  }
+
+  .buy-box button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .add-cart {
+    background: #ffd814;
+  }
+
+  .buy-now {
+    background: #ffa41c;
+  }
+
+  .details {
+    max-width: 1200px;
+    margin: 20px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- LEFT: IMAGE GALLERY -->
+  <div class="gallery">
+    <img id="mainImg" class="main-img">
+
+    <div id="thumbContainer" class="thumbs"></div>
+  </div>
+
+  <!-- CENTER: PRODUCT INFO -->
+  <div class="info">
+    <h1 id="productName"></h1>
+    <div class="price" id="productPrice"></div>
+    <p id="productDesc"></p>
+  </div>
+
+  <!-- RIGHT: BUY BOX -->
+  <div class="buy-box">
+    <div class="price" id="buyPrice"></div>
+    <button class="add-cart">Add to Cart</button>
+    <button class="buy-now">Buy Now</button>
+  </div>
+
+</div>
+
+<div class="details">
+  <h2>Description</h2>
+  <p id="longDesc"></p>
+</div>
+
+<script>
+async function loadProduct() {
+  const params = new URLSearchParams(window.location.search);
+  const id = parseInt(params.get("id"));
+
+  const res = await fetch("/motion-site/Products/products.json");
+  const data = await res.json();
+
+  const product = data.products.find(p => p.id === id);
+  if (!product) return;
+
+  // Fill content
+  document.getElementById("productName").textContent = product.name;
+  document.getElementById("productDesc").textContent = product.description;
+  document.getElementById("longDesc").textContent = product.description;
+
+  const price = product.variants?.[0]?.price || product.basePrice || 0;
+  document.getElementById("productPrice").textContent = "€" + price.toFixed(2);
+  document.getElementById("buyPrice").textContent = "€" + price.toFixed(2);
+
+  // Images
+  document.getElementById("mainImg").src = product.image;
+
+  const thumbContainer = document.getElementById("thumbContainer");
+  thumbContainer.innerHTML = "";
+
+  // If you add more images later, push them into an array
+  const images = [product.image];
+
+  images.forEach(src => {
+    const img = document.createElement("img");
+    img.src = src;
+    img.onclick = () => {
+      document.getElementById("mainImg").src = src;
+    };
+    thumbContainer.appendChild(img);
+  });
+}
+
+loadProduct();
+</script>
+
+</body>
+</html>
