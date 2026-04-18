@@ -32,6 +32,13 @@
           "price": 5,
           "stock": 2,
           "stripePriceId": "price_1TNWzORpxXH3zmmLS8WqN4XY"
+        },
+        {
+          "id": "2-2",
+          "name": "s",
+          "price": 12,
+          "stock": 2,
+          "stripePriceId": "price_1TNaspRpxXH3zmmLdZT1eK2Y"
         }
       ],
       "stripeProductId": "prod_UMFUvY2it3tbsw",
