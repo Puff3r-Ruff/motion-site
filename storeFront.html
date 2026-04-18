@@ -245,6 +245,10 @@
             <button class="add-btn" data-id="${product.id}">Add to Cart</button>
           </div>
         `;
+        
+        card.onclick = () => {
+  window.location.href = `product.html?id=${product.id}`;
+};
 
         productsGrid.appendChild(card);
       });
@@ -317,6 +321,11 @@
 
     document.getElementById("year").textContent = new Date().getFullYear();
     loadProducts();
+    
+    function openProduct(id) {
+  window.location.href = `product.html?id=${id}`;
+}
+
   </script>
 </body>
 </html>
