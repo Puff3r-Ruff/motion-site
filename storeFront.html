@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Store - E-commerce Template</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    header {
+      background: #222;
+      color: #fff;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header h1 {
+      font-size: 22px;
+    }
+
+    .cart {
+      font-size: 14px;
+    }
+
+    .cart span {
+      font-weight: bold;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 20px auto;
+      padding: 0 15px 40px;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .search-box input {
+      padding: 8px 10px;
+      width: 220px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    .sort-box select {
+      padding: 8px 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      background: #fff;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .product-card {
+      background: #fff;
+      border-radius: 6px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-image {
+      background: #eee;
+      border-radius: 4px;
+      height: 150px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: 14px;
+    }
+
+    .product-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .product-desc {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 8px;
+      min-height: 36px;
+    }
+
+    .product-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .price {
+      font-size: 16px;
+      font-weight: bold;
+      color: #e67e22;
+    }
+
+    .add-btn {
+      padding: 8px 12px;
+      border-radius: 4px;
+      border: none;
+      background: #27ae60;
+      color: #fff;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .add-btn:hover {
+      background: #219150;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 12px;
+      color: #777;
+      border-top: 1px solid #ddd;
+      background: #fafafa;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 18px;
+      }
+      .search-box input {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>My Store</h1>
+    <div class="cart">
+      Cart: <span id="cart-count">0</span> items — Total: €<span id="cart-total">0.00</span>
+    </div>
+  </header>
+
+  <main>
+    <div class="top-bar">
+      <div class="search-box">
+        <input type="text" id="search-input" placeholder="Search products..." />
+      </div>
+      <div class="sort-box">
+        <label for="sort-select">Sort by: </label>
+        <select id="sort-select">
+          <option value="default">Default</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="name-asc">Name: A–Z</option>
+          <option value="name-desc">Name: Z–A</option>
+        </select>
+      </div>
+    </div>
+
+    <section class="products-grid" id="products-grid">
+      <!-- Products will be rendered here by JS -->
+    </section>
+  </main>
+
+  <div class="footer">
+    &copy; <span id="year"></span> My Store. All rights reserved.
+  </div>
+
+ <script>
+  let products = [];
+  let images = {};
+
+  const productsGrid = document.getElementById("products-grid");
+  const cartCountEl = document.getElementById("cart-count");
+  const cartTotalEl = document.getElementById("cart-total");
+  const searchInput = document.getElementById("search-input");
+  const sortSelect = document.getElementById("sort-select");
+
+  let cartCount = 0;
+  let cartTotal = 0;
+
+  // ---------------------------------------------------------
+  // LOAD PRODUCTS FROM YOUR VERCEL API (GitHub-backed)
+  // ---------------------------------------------------------
+  async function loadProducts() {
+    const url = new URL(window.location.href);
+    const connectId = url.searchParams.get("connectId");
+    const repo = url.searchParams.get("repo");
+
+    const res = await fetch("https://www.ideago.ie/api/products/load", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ connectId, repo })
+    });
+
+    const data = await res.json();
+
+    products = data.products || [];
+    images = data.images || {};
+
+    renderProducts(products);
+  }
+
+  // ---------------------------------------------------------
+  // RENDER PRODUCTS
+  // ---------------------------------------------------------
+  function renderProducts(list) {
+    productsGrid.innerHTML = "";
+
+    list.forEach((product, index) => {
+      const imgSrc = images[index + 1] || "";
+
+      const price = product.variants?.[0]?.price || 0;
+
+      const card = document.createElement("article");
+      card.className = "product-card";
+      card.setAttribute("data-name", product.name.toLowerCase());
+      card.setAttribute("data-price", price);
+
+      card.innerHTML = `
+        <div class="product-image">
+          <img src="${imgSrc}" style="width:100%; height:150px; object-fit:cover; border-radius:4px;" />
+        </div>
+
+        <div class="product-title">${product.name}</div>
+        <div class="product-desc">${product.description}</div>
+
+        <div class="product-meta">
+          <div class="price">€${price.toFixed(2)}</div>
+          <button class="add-btn" data-index="${index}">Buy</button>
+        </div>
+      `;
+
+      productsGrid.appendChild(card);
+    });
+
+    attachBuyHandlers();
+  }
+
+  // ---------------------------------------------------------
+  // BUY BUTTON → STRIPE CHECKOUT
+  // ---------------------------------------------------------
+  function attachBuyHandlers() {
+    document.querySelectorAll(".add-btn").forEach(btn => {
+      btn.onclick = async function () {
+        const index = parseInt(this.getAttribute("data-index"), 10);
+        const product = products[index];
+        const variant = product.variants[0];
+
+        const url = new URL(window.location.href);
+        const connectId = url.searchParams.get("connectId");
+
+        const res = await fetch("https://www.ideago.ie/api/checkout/create-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            connectId,
+            priceId: variant.stripePriceId
+          })
+        });
+
+        const data = await res.json();
+
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          alert("Checkout error");
+        }
+      };
+    });
+  }
+
+  // ---------------------------------------------------------
+  // SEARCH + SORT
+  // ---------------------------------------------------------
+  searchInput.addEventListener("input", () => {
+    const term = searchInput.value.toLowerCase();
+    const filtered = products.filter(p =>
+      p.name.toLowerCase().includes(term) ||
+      p.description.toLowerCase().includes(term)
+    );
+    renderProducts(filtered);
+  });
+
+  sortSelect.addEventListener("change", () => {
+    let sorted = [...products];
+    const value = sortSelect.value;
+
+    if (value === "price-asc") sorted.sort((a, b) => a.variants[0].price - b.variants[0].price);
+    if (value === "price-desc") sorted.sort((a, b) => b.variants[0].price - a.variants[0].price);
+    if (value === "name-asc") sorted.sort((a, b) => a.name.localeCompare(b.name));
+    if (value === "name-desc") sorted.sort((a, b) => b.name.localeCompare(a.name));
+
+    renderProducts(sorted);
+  });
+
+  // ---------------------------------------------------------
+  // INIT
+  // ---------------------------------------------------------
+  document.getElementById("year").textContent = new Date().getFullYear();
+  loadProducts();
+</script>
+
+</body>
+</html>
