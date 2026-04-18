@@ -241,9 +241,16 @@
           <div class="product-title">${product.name}</div>
           <div class="product-desc">${product.description}</div>
           <div class="product-meta">
-            <div class="price">€${lowestPrice.toFixed(2)}</div>
-            <button class="add-btn" data-id="${product.id}">Add to Cart</button>
-          </div>
+  <select class="variant-select" data-id="${product.id}">
+    ${product.variants.map(v => `
+      <option value="${v.id}" data-price="${v.price}">
+        ${v.name} — €${v.price}
+      </option>
+    `).join("")}
+  </select>
+
+  <button class="add-btn" data-id="${product.id}">Add to Cart</button>
+</div>
         `;
         
         card.onclick = () => {
@@ -257,23 +264,27 @@
     }
 
     function attachAddToCartHandlers() {
-      const buttons = document.querySelectorAll(".add-btn");
+  const buttons = document.querySelectorAll(".add-btn");
 
-      buttons.forEach(btn => {
-        btn.onclick = function () {
-          const id = parseInt(this.getAttribute("data-id"), 10);
-          const product = products.find(p => p.id === id);
-          if (!product) return;
+  buttons.forEach(btn => {
+    btn.onclick = function () {
+      const productId = parseInt(this.getAttribute("data-id"));
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
 
-          const price = product.variants?.[0]?.price || product.basePrice || 0;
+      const variantSelect = this.parentElement.querySelector(".variant-select");
+      const selectedOption = variantSelect.options[variantSelect.selectedIndex];
 
-          cartCount += 1;
-          cartTotal += price;
+      const price = parseFloat(selectedOption.dataset.price);
 
-          updateCartDisplay();
-        };
-      });
-    }
+      cartCount += 1;
+      cartTotal += price;
+
+      updateCartDisplay();
+    };
+  });
+}
+
 
     function updateCartDisplay() {
       cartCountEl.textContent = cartCount;
