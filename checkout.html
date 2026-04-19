@@ -32,7 +32,7 @@ async function init() {
   const cart = JSON.parse(localStorage.getItem("cart") || "[]");
 
   const res = await fetch(
-    "https://idea-checker.vercel.app/api/stripe/create-payment-intent",
+    "https://www.ideago.ie/api/stripe/create-payment-intent",
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
