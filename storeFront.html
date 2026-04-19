@@ -327,6 +327,47 @@ loadProducts();
 function openCart() {
   window.location.href = "cart.html";
 }
+// Search filter
+function filterProducts() {
+  const term = searchInput.value.toLowerCase();
+
+  const filtered = products.filter(p =>
+    p.name.toLowerCase().includes(term) ||
+    p.description.toLowerCase().includes(term)
+  );
+
+  renderProducts(filtered);
+}
+
+// Sorting
+function applySort() {
+  const value = sortSelect.value;
+
+  let sorted = [...products];
+
+  if (value === "price-asc") {
+    sorted.sort((a, b) => {
+      const pa = a.variants?.[0]?.price || 0;
+      const pb = b.variants?.[0]?.price || 0;
+      return pa - pb;
+    });
+  } 
+  else if (value === "price-desc") {
+    sorted.sort((a, b) => {
+      const pa = a.variants?.[0]?.price || 0;
+      const pb = b.variants?.[0]?.price || 0;
+      return pb - pa;
+    });
+  } 
+  else if (value === "name-asc") {
+    sorted.sort((a, b) => a.name.localeCompare(b.name));
+  } 
+  else if (value === "name-desc") {
+    sorted.sort((a, b) => b.name.localeCompare(a.name));
+  }
+
+  renderProducts(sorted);
+}
 </script>
 
 </body>
