@@ -1,8 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Checkout</title>
   <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    #submit {
+      margin-top: 20px;
+      padding: 12px 20px;
+      background: #27ae60;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+  </style>
 </head>
 <body>
 
@@ -12,16 +26,19 @@
 <button id="submit">Pay Now</button>
 
 <script>
-const stripe = Stripe("pk_test_51SmbYSRqySo1SbUl9zUatOFdeP2eN1jYSDT4gNWFjzDaPLMF4QaeXONAJ9Ii2QVz7Bugnhp11UFCCFyg625JGGGu00uMAvRXJq"); // your publishable key
+const stripe = Stripe("pk_test_51SmbYSRqySo1SbUl9zUatOFdeP2eN1jYSDT4gNWFjzDaPLMF4QaeXONAJ9Ii2QVz7Bugnhp11UFCCFyg625JGGGu00uMAvRXJq");
 
 async function init() {
   const cart = JSON.parse(localStorage.getItem("cart") || "[]");
 
-  const res = await fetch("/create-payment-intent", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ cart })
-  });
+  const res = await fetch(
+    "https://idea-checker-hmf1c35wv-puffs-projects-de5ca2e2.vercel.app/api/stripe/create-payment-intent",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ cart })
+    }
+  );
 
   const { clientSecret } = await res.json();
 
