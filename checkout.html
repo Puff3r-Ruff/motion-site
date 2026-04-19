@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Checkout</title>
+  <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+
+<h1>Checkout</h1>
+
+<div id="payment-element"></div>
+<button id="submit">Pay Now</button>
+
+<script>
+const stripe = Stripe("pk_test_xxx"); // your publishable key
+
+async function init() {
+  const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+  const res = await fetch("/create-payment-intent", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ cart })
+  });
+
+  const { clientSecret } = await res.json();
+
+  const elements = stripe.elements({ clientSecret });
+  const paymentElement = elements.create("payment");
+  paymentElement.mount("#payment-element");
+
+  document.getElementById("submit").onclick = async () => {
+    await stripe.confirmPayment({
+      elements,
+      clientSecret,
+      confirmParams: {
+        return_url: window.location.origin + "/success.html"
+      }
+    });
+  };
+}
+
+init();
+</script>
+
+</body>
+</html>
