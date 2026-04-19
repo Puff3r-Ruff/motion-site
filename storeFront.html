@@ -149,6 +149,11 @@
       border-top: 1px solid #ddd;
       background: #fafafa;
     }
+    
+    .cart:hover {
+  opacity: 0.8;
+}
+
 
     @media (max-width: 600px) {
       header h1 {
@@ -163,9 +168,10 @@
 <body>
   <header>
     <h1>My Store</h1>
-    <div class="cart">
-      Cart: <span id="cart-count">0</span> items — Total: €<span id="cart-total">0.00</span>
+    <div class="cart" onclick="openCart()" style="cursor:pointer;">
+  🛒 Cart: <span id="cart-count">0</span> items — Total: €<span id="cart-total">0.00</span>
     </div>
+
   </header>
 
   <main>
