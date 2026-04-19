@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Product Page</title>
 
 <style>
@@ -17,13 +18,18 @@
     padding: 20px;
     display: flex;
     gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .gallery, .info, .buy-box {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
   }
 
   .gallery {
     flex: 1;
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
+    min-width: 300px;
   }
 
   .main-img {
@@ -51,9 +57,7 @@
 
   .info {
     flex: 1.2;
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
+    min-width: 300px;
   }
 
   .info h1 {
@@ -69,9 +73,7 @@
 
   .buy-box {
     width: 280px;
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
+    min-width: 260px;
     height: fit-content;
     border: 1px solid #ddd;
   }
@@ -101,6 +103,15 @@
     padding: 20px;
     border-radius: 8px;
   }
+
+  @media (max-width: 768px) {
+    .main-img {
+      height: 300px;
+    }
+    .buy-box {
+      width: 100%;
+    }
+  }
 </style>
 </head>
 <body>
@@ -110,7 +121,6 @@
   <!-- LEFT: IMAGE GALLERY -->
   <div class="gallery">
     <img id="mainImg" class="main-img">
-
     <div id="thumbContainer" class="thumbs"></div>
   </div>
 
@@ -119,16 +129,16 @@
     <h1 id="productName"></h1>
     <div class="price" id="productPrice"></div>
     <p id="productDesc"></p>
-    <label for="variantSelect"><strong>Variant:</strong></label>
-    <select id="variantSelect" style="padding:8px; margin:10px 0; width:150px;"></select>
 
+    <label><strong>Variant:</strong></label><br>
+    <select id="variantSelect" style="padding:8px; margin:10px 0; width:200px;"></select>
   </div>
 
   <!-- RIGHT: BUY BOX -->
   <div class="buy-box">
     <div class="price" id="buyPrice"></div>
-    <button class="add-cart">Add to Cart</button>
-    <button class="buy-now">Buy Now</button>
+    <button class="add-cart" id="addCartBtn">Add to Cart</button>
+    <button class="buy-now" id="buyNowBtn">Buy Now</button>
   </div>
 
 </div>
@@ -139,6 +149,9 @@
 </div>
 
 <script>
+let product = null;
+let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
 async function loadProduct() {
   const params = new URLSearchParams(window.location.search);
   const id = parseInt(params.get("id"));
@@ -146,18 +159,16 @@ async function loadProduct() {
   const res = await fetch("/motion-site/Products/products.json");
   const data = await res.json();
 
-  const product = data.products.find(p => p.id === id);
+  product = data.products.find(p => p.id === id);
   if (!product) return;
 
-  // Fill basic info
+  // Fill info
   document.getElementById("productName").textContent = product.name;
   document.getElementById("productDesc").textContent = product.description;
   document.getElementById("longDesc").textContent = product.description;
 
-  // Variant dropdown
+  // Variants
   const variantSelect = document.getElementById("variantSelect");
-  variantSelect.innerHTML = "";
-
   product.variants.forEach(v => {
     const opt = document.createElement("option");
     opt.value = v.id;
@@ -168,28 +179,11 @@ async function loadProduct() {
     variantSelect.appendChild(opt);
   });
 
-  // Set default variant
-  updateVariantDisplay();
-
   variantSelect.addEventListener("change", updateVariantDisplay);
-
-  function updateVariantDisplay() {
-    const selected = variantSelect.options[variantSelect.selectedIndex];
-
-    const price = parseFloat(selected.dataset.price);
-    const stock = parseInt(selected.dataset.stock);
-
-    document.getElementById("productPrice").textContent = "€" + price.toFixed(2);
-    document.getElementById("buyPrice").textContent = "€" + price.toFixed(2);
-
-    // Disable buy buttons if out of stock
-    document.querySelector(".add-cart").disabled = stock <= 0;
-    document.querySelector(".buy-now").disabled = stock <= 0;
-  }
+  updateVariantDisplay();
 
   // Images
   document.getElementById("mainImg").src = product.image;
-
   const thumbContainer = document.getElementById("thumbContainer");
   thumbContainer.innerHTML = "";
 
@@ -203,6 +197,93 @@ async function loadProduct() {
     };
     thumbContainer.appendChild(img);
   });
+
+  // Buttons
+  document.getElementById("addCartBtn").onclick = addToCart;
+  document.getElementById("buyNowBtn").onclick = buyNow;
+}
+
+function updateVariantDisplay() {
+  const select = document.getElementById("variantSelect");
+  const opt = select.options[select.selectedIndex];
+
+  const price = parseFloat(opt.dataset.price);
+  const stock = parseInt(opt.dataset.stock);
+
+  document.getElementById("productPrice").textContent = "€" + price.toFixed(2);
+  document.getElementById("buyPrice").textContent = "€" + price.toFixed(2);
+
+  document.getElementById("addCartBtn").disabled = stock <= 0;
+  document.getElementById("buyNowBtn").disabled = stock <= 0;
+}
+
+function saveCart() {
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+function addToCart() {
+  const select = document.getElementById("variantSelect");
+  const opt = select.options[select.selectedIndex];
+
+  const variantId = opt.value;
+  const price = parseFloat(opt.dataset.price);
+  const stock = parseInt(opt.dataset.stock);
+  const stripePriceId = opt.dataset.stripe;
+
+  const existing = cart.find(i => i.variantId === variantId);
+
+  if (existing) {
+    if (existing.quantity >= stock) {
+      alert("No more stock available.");
+      return;
+    }
+    existing.quantity += 1;
+  } else {
+    cart.push({
+      productId: product.id,
+      variantId,
+      name: product.name,
+      variantName: opt.textContent,
+      price,
+      stripePriceId,
+      quantity: 1,
+      stock
+    });
+  }
+
+  saveCart();
+  alert("Added to cart!");
+}
+
+function buyNow() {
+  const select = document.getElementById("variantSelect");
+  const opt = select.options[select.selectedIndex];
+
+  const price = parseFloat(opt.dataset.price);
+  const stock = parseInt(opt.dataset.stock);
+  const stripePriceId = opt.dataset.stripe;
+
+  if (stock <= 0) {
+    alert("Out of stock.");
+    return;
+  }
+
+  // Create a temporary cart with only this item
+  const tempCart = [{
+    productId: product.id,
+    variantId: opt.value,
+    name: product.name,
+    variantName: opt.textContent,
+    price,
+    stripePriceId,
+    quantity: 1,
+    stock
+  }];
+
+  localStorage.setItem("checkout_single", JSON.stringify(tempCart));
+
+  // Redirect to checkout with single item mode
+  window.location.href = "checkout.html?single=true";
 }
 
 loadProduct();
