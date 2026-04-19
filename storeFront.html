@@ -209,3 +209,215 @@
   </style>
 </head>
 <body>
+  <header>
+    <h1>My Store</h1>
+    <div class="cart" onclick="openCart()" style="cursor:pointer;">
+  🛒 Cart: <span id="cart-count">0</span> items — Total: €<span id="cart-total">0.00</span>
+    </div>
+
+  </header>
+
+  <main>
+    <div class="top-bar">
+      <div class="search-box">
+        <input type="text" id="search-input" placeholder="Search products..." />
+      </div>
+      <div class="sort-box">
+        <label for="sort-select">Sort by: </label>
+        <select id="sort-select">
+          <option value="default">Default</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="name-asc">Name: A–Z</option>
+          <option value="name-desc">Name: Z–A</option>
+        </select>
+      </div>
+    </div>
+
+    <section class="products-grid" id="products-grid">
+      <!-- Products load here -->
+    </section>
+  </main>
+
+  <div class="footer">
+    &copy; <span id="year"></span> My Store. All rights reserved.
+  </div>
+
+<script>
+let products = [];
+let cart = [];
+
+const productsGrid = document.getElementById("products-grid");
+const cartCountEl = document.getElementById("cart-count");
+const cartTotalEl = document.getElementById("cart-total");
+const searchInput = document.getElementById("search-input");
+const sortSelect = document.getElementById("sort-select");
+
+function loadCart() {
+  const saved = localStorage.getItem("cart");
+  if (saved) cart = JSON.parse(saved);
+  updateCartDisplay();
+}
+loadCart();
+
+async function loadProducts() {
+  try {
+    const res = await fetch("Products/products.json");
+    const data = await res.json();
+    products = data.products;
+    renderProducts(products);
+  } catch (err) {
+    console.error("Error loading products.json:", err);
+  }
+}
+
+function renderProducts(list) {
+  productsGrid.innerHTML = "";
+
+  list.forEach(product => {
+    const card = document.createElement("article");
+    card.className = "product-card";
+
+    card.innerHTML = `
+      <div class="product-image">
+        <img src="${product.image}" alt="${product.name}">
+      </div>
+      <div class="product-title">${product.name}</div>
+      <div class="product-desc">${product.description}</div>
+
+      <div class="product-meta">
+        <select class="variant-select" data-id="${product.id}">
+          ${product.variants.map(v => `
+            <option 
+              value="${v.id}" 
+              data-price="${v.price}" 
+              data-stock="${v.stock}"
+              data-stripe="${v.stripePriceId}">
+              ${v.name} — €${v.price}
+            </option>
+          `).join("")}
+        </select>
+
+        <button class="add-btn" data-id="${product.id}">Add to Cart</button>
+      </div>
+    `;
+
+    // Clicking card opens product page
+    card.onclick = () => window.location.href = `product.html?id=${product.id}`;
+
+    productsGrid.appendChild(card);
+  });
+
+  attachAddToCartHandlers();
+}
+
+function attachAddToCartHandlers() {
+  document.querySelectorAll(".add-btn").forEach(btn => {
+    btn.onclick = function (e) {
+      e.stopPropagation(); // prevent redirect
+
+      const productId = parseInt(this.dataset.id);
+      const product = products.find(p => p.id === productId);
+
+      const variantSelect = this.parentElement.querySelector(".variant-select");
+      const opt = variantSelect.options[variantSelect.selectedIndex];
+
+      const variantId = opt.value;
+      const price = parseFloat(opt.dataset.price);
+      const stock = parseInt(opt.dataset.stock);
+      const stripePriceId = opt.dataset.stripe;
+
+      // Check if already in cart
+      const existing = cart.find(i => i.variantId === variantId);
+
+      if (existing) {
+        if (existing.quantity >= stock) {
+          alert("No more stock available for this variant.");
+          return;
+        }
+        existing.quantity += 1;
+      } else {
+        cart.push({
+          productId,
+          variantId,
+          name: product.name,
+          variantName: opt.textContent,
+          price,
+          stripePriceId,
+          quantity: 1,
+          stock
+        });
+      }
+
+      saveCart();
+      updateCartDisplay();
+    };
+  });
+}
+
+function saveCart() {
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+function updateCartDisplay() {
+  const count = cart.reduce((sum, i) => sum + i.quantity, 0);
+  const total = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
+
+  cartCountEl.textContent = count;
+  cartTotalEl.textContent = total.toFixed(2);
+}
+
+searchInput.addEventListener("input", filterProducts);
+sortSelect.addEventListener("change", applySort);
+
+document.getElementById("year").textContent = new Date().getFullYear();
+loadProducts();
+
+function openCart() {
+  window.location.href = "cart.html";
+}
+// Search filter
+function filterProducts() {
+  const term = searchInput.value.toLowerCase();
+
+  const filtered = products.filter(p =>
+    p.name.toLowerCase().includes(term) ||
+    p.description.toLowerCase().includes(term)
+  );
+
+  renderProducts(filtered);
+}
+
+// Sorting
+function applySort() {
+  const value = sortSelect.value;
+
+  let sorted = [...products];
+
+  if (value === "price-asc") {
+    sorted.sort((a, b) => {
+      const pa = a.variants?.[0]?.price || 0;
+      const pb = b.variants?.[0]?.price || 0;
+      return pa - pb;
+    });
+  } 
+  else if (value === "price-desc") {
+    sorted.sort((a, b) => {
+      const pa = a.variants?.[0]?.price || 0;
+      const pb = b.variants?.[0]?.price || 0;
+      return pb - pa;
+    });
+  } 
+  else if (value === "name-asc") {
+    sorted.sort((a, b) => a.name.localeCompare(b.name));
+  } 
+  else if (value === "name-desc") {
+    sorted.sort((a, b) => b.name.localeCompare(a.name));
+  }
+
+  renderProducts(sorted);
+}
+</script>
+
+</body>
+</html>
