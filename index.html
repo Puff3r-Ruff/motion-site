@@ -147,13 +147,19 @@ document.getElementById("about-btn").onclick = function () {
   }
 };
 
-fetch('/storeFront.html', { method: 'GET' })
-  .then(async response => {
-    const text = await response.text();
-    const isIndexFallback = text.includes('<title>Paws & Shine Grooming</title>');
-    
-    document.getElementById('store-link').style.visibility =
-      (!isIndexFallback) ? 'visible' : 'hidden';
+fetch('storeFront.html', { method: 'HEAD' })
+  .then(response => {
+    if (response.ok) {
+      // File exists
+      document.getElementById('store-link').style.visibility = 'visible';
+    } else {
+      // File does NOT exist
+      document.getElementById('store-link').style.visibility = 'hidden';
+    }
+  })
+  .catch(() => {
+    // Network error or file missing
+    document.getElementById('store-link').style.visibility = 'hidden';
   });
 </script>
 
