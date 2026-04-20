@@ -365,7 +365,13 @@ function renderProducts(list) {
 
     productsGrid.appendChild(card);
   });
-
+  
+  // Prevent variant dropdown from triggering card click
+  document.querySelectorAll(".variant-select").forEach(select => {
+    select.addEventListener("click", e => e.stopPropagation());
+    select.addEventListener("change", e => e.stopPropagation());
+  });
+  
   attachAddToCartHandlers();
 }
 
