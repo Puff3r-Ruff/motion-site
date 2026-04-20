@@ -43,6 +43,42 @@
       ],
       "stripeProductId": "prod_UMFUvY2it3tbsw",
       "image": "Products/images/product-2.jpg"
+    },
+    {
+      "id": 3,
+      "name": "New Product",
+      "description": "Enter a description...",
+      "basePrice": null,
+      "baseStock": null,
+      "variants": [
+        {
+          "id": "3-1",
+          "name": "M",
+          "price": 10,
+          "stock": 21,
+          "stripePriceId": "price_1TOOKFRpxXH3zmmLB0gF8xgI"
+        }
+      ],
+      "image": "Products/images/product-3.jpg",
+      "stripeProductId": "prod_UN8b7kjSr7pZ2c"
+    },
+    {
+      "id": 4,
+      "name": "New Product",
+      "description": "Enter a description...",
+      "basePrice": null,
+      "baseStock": null,
+      "variants": [
+        {
+          "id": "4-1",
+          "name": "M",
+          "price": 2,
+          "stock": 12,
+          "stripePriceId": "price_1TOOKFRpxXH3zmmLdsXfEteI"
+        }
+      ],
+      "image": "Products/images/product-4.jpg",
+      "stripeProductId": "prod_UN8bFoogJAPlL4"
     }
   ]
 }
