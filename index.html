@@ -148,9 +148,12 @@ document.getElementById("about-btn").onclick = function () {
 };
 
 fetch('/storeFront.html', { method: 'GET' })
-  .then(response => {
+  .then(async response => {
+    const text = await response.text();
+    const isIndexFallback = text.includes('<title>Paws & Shine Grooming</title>');
+    
     document.getElementById('store-link').style.visibility =
-      response.ok ? 'visible' : 'hidden';
+      (!isIndexFallback) ? 'visible' : 'hidden';
   });
 </script>
 
