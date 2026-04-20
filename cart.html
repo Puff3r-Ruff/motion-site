@@ -9,28 +9,31 @@
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
-      background: #f5f5f5;
-      color: #333;
+      background: #ffffff;
+      color: #111;
       max-width: 900px;
       margin: auto;
+      line-height: 1.5;
     }
 
     h1 {
       margin-bottom: 20px;
       font-size: 26px;
+      font-weight: bold;
+      color: #111;
     }
 
     /* CART ITEM */
     .item {
       background: #fff;
       padding: 15px;
-      border-radius: 8px;
+      border-radius: 4px;
       margin-bottom: 15px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 15px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      border: 1px solid #ddd;
       flex-wrap: wrap;
     }
 
@@ -41,6 +44,7 @@
 
     .item-info strong {
       font-size: 16px;
+      color: #0f1111;
     }
 
     .qty-controls {
@@ -52,30 +56,30 @@
     .qty-controls button {
       padding: 6px 10px;
       font-size: 16px;
-      border: none;
-      background: #ddd;
-      border-radius: 6px;
+      border: 1px solid #bbb;
+      background: #f0f2f2;
+      border-radius: 4px;
       cursor: pointer;
       transition: 0.2s;
     }
 
     .qty-controls button:hover {
-      background: #ccc;
+      background: #e3e6e6;
     }
 
     .remove-btn {
-      background: #e74c3c;
+      background: #d62828;
       color: #fff;
       border: none;
       padding: 8px 12px;
-      border-radius: 6px;
+      border-radius: 4px;
       cursor: pointer;
       transition: 0.2s;
       white-space: nowrap;
     }
 
     .remove-btn:hover {
-      background: #c0392b;
+      background: #b71f1f;
     }
 
     /* TOTAL + CHECKOUT */
@@ -83,28 +87,33 @@
       margin-top: 20px;
       font-size: 20px;
       font-weight: bold;
+      color: #111;
     }
 
+    /* AMAZON STYLE CHECKOUT BUTTON */
     .checkout-btn {
       margin-top: 20px;
       padding: 14px 20px;
-      background: #27ae60;
-      color: #fff;
-      border: none;
+      background: linear-gradient(#f7dfa5, #f0c14b);
+      border: 1px solid #a88734;
+      color: #111;
       cursor: pointer;
-      border-radius: 8px;
+      border-radius: 4px;
       font-size: 18px;
       width: 100%;
       transition: 0.2s;
+      font-weight: bold;
     }
-    .checkout-bar {
-      visibility: hidden;
-    }
+
     .checkout-btn:hover {
-      background: #219150;
+      background: linear-gradient(#f5d78e, #eeb933);
     }
 
     /* MOBILE FIXED CHECKOUT BAR */
+    .checkout-bar {
+      display: none;
+    }
+
     @media (max-width: 600px) {
       body {
         padding-bottom: 90px;
@@ -122,7 +131,6 @@
         justify-content: space-between;
         align-items: center;
         z-index: 999;
-        visibility: visible;
       }
 
       .checkout-bar button {
@@ -146,7 +154,7 @@
 <button class="checkout-btn" onclick="goCheckout()">Proceed to Checkout</button>
 
 <!-- MOBILE CHECKOUT BAR -->
-<div class="checkout-bar" style="display:none;" id="checkout-bar">
+<div class="checkout-bar" id="checkout-bar">
   <div><strong>Total: €<span id="total-mobile"></span></strong></div>
   <button class="checkout-btn" style="margin:0;" onclick="goCheckout()">Checkout</button>
 </div>
