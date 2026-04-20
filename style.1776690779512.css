@@ -1,7 +1,7 @@
 /* ---------------- GLOBAL ---------------- */
 body {
   margin: 0;
-  font-family: "Poppins", sans-serif;
+  font-family: "Inter", sans-serif; /* Updated font */
   background: #f8fafc;
   color: #333;
 }
@@ -49,6 +49,33 @@ nav ul li a {
 nav ul li a:hover {
   color: #4a90e2;
 }
+
+/* MOBILE MENU BUTTON */
+.menu-btn {
+  display: none;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+/* MOBILE MENU PANEL */
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  background: white;
+  width: 100%;
+  padding: 20px 8%;
+  position: absolute;
+  top: 70px;
+  left: 0;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.mobile-menu a {
+  padding: 12px 0;
+  font-size: 1.1rem;
+  border-bottom: 1px solid #eee;
+}
+
 /* ---------------- HERO ---------------- */
 .hero {
   position: relative;
@@ -57,15 +84,14 @@ nav ul li a:hover {
   overflow: hidden;
 }
 
-/* ⭐ FIXED HERO IMAGE — PERFECTLY RESPONSIVE ⭐ */
 .hero img {
   width: 100%;
   height: 100%;
-  object-fit: cover;        /* keeps proportions */
-  object-position: center;  /* keeps subject centered */
+  object-fit: cover;
+  object-position: center;
+  display: block;
 }
 
-/* HERO CONTENT */
 .hero-content {
   position: absolute;
   top: 50%;
@@ -77,15 +103,15 @@ nav ul li a:hover {
   padding: 30px;
   background: rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(6px);
-  border-radius: 1.3;
+  border-radius: 1.3rem;
 }
 
 .hero-content h1 {
-  font-size: 3.5;
+  font-size: 3.5rem;
 }
 
 .hero-content p {
-  font-size: 1.2;
+  font-size: 1.2rem;
   margin: 20px 0;
 }
 
@@ -94,7 +120,7 @@ nav ul li a:hover {
   background: #4a90e2;
   border: none;
   color: white;
-  font-size: 1.1;
+  font-size: 1.1rem;
   border-radius: 40px;
   cursor: pointer;
   transition: 0.3s;
@@ -103,14 +129,56 @@ nav ul li a:hover {
 .hero-content button:hover {
   background: #3a78c2;
 }
-@media (max-width: 600px) {
-    .hero-content {
-        width: 75%;
-        padding: 20px;
-        top: 75%;
-        background: rgba(0, 0, 0, 0.25);
-    }
+
+/* ---------------- ABOUT ---------------- */
+#about {
+  padding: 60px 20px;
+  background: #eaf4ff;
+  border-top: 1px solid #d6e8ff;
+  border-bottom: 1px solid #d6e8ff;
+  display: flex;
+  justify-content: center;
+  color: #333;
 }
+
+.about-container {
+  max-width: 750px;
+  text-align: center;
+  background: white;
+  padding: 40px 30px;
+  border-radius: 20px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+.about-title {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: #4a90e2;
+}
+
+.about-text {
+  font-size: 1.2rem;
+  line-height: 1.7;
+  margin-bottom: 30px;
+  opacity: 0.9;
+}
+
+#about-btn {
+  padding: 12px 28px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 30px;
+  background: #4a90e2;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#about-btn:hover {
+  background: #3a78c2;
+  transform: translateY(-2px);
+}
+
 /* ---------------- SERVICES ---------------- */
 .services {
   padding: 50px 8%;
@@ -138,12 +206,9 @@ nav ul li a:hover {
 
 .service-card img {
   width: 80px;
+  height: auto;
+  object-fit: contain;
   margin-bottom: 20px;
-}
-
-.service-card h3 {
-  color: #4a90e2;
-  margin-bottom: 10px;
 }
 
 /* ---------------- GALLERY ---------------- */
@@ -180,12 +245,12 @@ nav ul li a:hover {
 }
 
 .contact-cta h2 {
-  font-size: 2.5;
+  font-size: 2.5rem;
 }
 
 .contact-cta p {
   margin: 20px 0;
-  font-size: 1.2;
+  font-size: 1.2rem;
 }
 
 .contact-cta button {
@@ -193,7 +258,7 @@ nav ul li a:hover {
   background: #4a90e2;
   border: none;
   color: white;
-  font-size: 1.1;
+  font-size: 1.1rem;
   border-radius: 40px;
   cursor: pointer;
   transition: 0.3s;
@@ -203,6 +268,56 @@ nav ul li a:hover {
   background: #3a78c2;
 }
 
+/* ---------------- FOOTER ---------------- */
+footer {
+  text-align: center;
+  padding: 30px;
+  background: #f0f6ff;
+  border-top: 1px solid #d6e8ff;
+  font-size: 1rem;
+}
+
+/* ---------------- MOBILE BREAKPOINTS ---------------- */
+@media (max-width: 900px) {
+  nav ul {
+    display: none;
+  }
+
+  .menu-btn {
+    display: block;
+  }
+
+  .hero {
+    height: 70vh;
+  }
+
+  .hero-content h1 {
+    font-size: 2.4rem;
+  }
+
+  .hero-content p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero {
+    height: 60vh;
+  }
+
+  .hero-content {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .hero-content h1 {
+    font-size: 1.9rem;
+  }
+
+  .contact-cta h2 {
+    font-size: 2rem;
+  }
+}
 /* ---------------- FOOTER ---------------- */
 footer {
   text-align: center;

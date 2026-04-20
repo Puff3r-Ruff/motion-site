@@ -4,23 +4,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Paws &amp; Shine Grooming</title>
 
-<link rel="stylesheet" href="style.1776424647245.css">
+<link rel="stylesheet" href="style.1776690779512.css">
 
  
 
 
 
-<link rel="stylesheet" href="chrome-extension://2b4b8ca8-bc1a-4560-938a-394d72a55d0e/app/content-style.css"></head>
+<script id="RequiredScript">
+function toggleMenu() {
+  const menu = document.querySelector('.mobile-menu');
+  menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+}
+</script>
+
+<link rel="stylesheet" href="chrome-extension://3c33dbd8-cbcf-4bb2-86dc-d7e420423bbf/app/content-style.css"></head>
 <body id="Sav">
 
 <!-- NAV -->
 <nav>
   <p class="logo" style="cursor: text;">Paws &amp; Shine</p>
+  <ul>
+    <li id="store-link" style="display:none;">
+      <a href="/storeFront.html">Store</a>
+    </li>
+  </ul>
 </nav>
- 
+
+
 <!-- HERO -->
 <section class="hero">
-  <img src="images/img_0.1776424647245.jpg" alt="Pet Grooming" style="cursor: pointer;">
+  <img src="images/img_0.1776690779512.jpg" alt="Pet Grooming" style="cursor: pointer;">
   <div class="hero-content">
     <h1 class="" style="cursor: text;">Premium Pet Grooming</h1>
     <p class="" style="cursor: text;">Gentle care, happy pets, and professional grooming for dogs &amp; cats.</p>
@@ -28,61 +41,68 @@
   </div>
 </section>
 
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-container">
+    <h2 class="about-title" style="cursor: text;">Our Grooming Services</h2>
+
+    <!-- ⭐ Premium About Text Inserted -->
+    <p class="about-text" style="cursor: text;">Bath, haircut, nail trim, ear cleaning &amp; styling.</p>
+
+    <button id="about-btn">Learn More</button>
+
+    <p id="extra-text" style="display: none; opacity: 0; transition: opacity 0.5s; cursor: text;" class="">Deep clean bath, blow dry &amp; full brushing.</p>
+  </div>
+</section>
+
 <!-- SERVICES -->
 <section id="services" class="services">
-  <h2 class="" style="cursor: text;">Our Grooming Services</h2>
+  <h2 class="" style="cursor: text;">Happy Pets</h2>
   <div class="services-grid">
     <div class="service-card">
-      <img src="images/img_1.1776424647245.jpg" style="cursor: pointer;">
+      <img src="images/img_1.1776690779512.jpg" style="cursor: pointer;">
       <h3 class="" style="cursor: text;">Full Groom</h3>
-      <p class="" style="cursor: text;">Bath, haircut, nail trim, ear cleaning &amp; styling.</p>
-    </div>
-    <div class="service-card">
-      <img src="images/img_2.1776424647245.jpg" style="cursor: pointer;">
-      <h3 class="" style="cursor: text;">Bath &amp; Brush</h3>
-      <p class="" style="cursor: text;">Deep clean bath, blow dry &amp; full brushing.</p>
-    </div>
-    <div class="service-card">
-      <img src="images/img_3.1776424647245.jpg" style="cursor: pointer;">
-      <h3 class="" style="cursor: text;">Puppy Intro</h3>
       <p class="" style="cursor: text;">Gentle grooming for puppies to get them comfortable.</p>
+    </div>
+    <div class="service-card">
+      <img src="images/img_2.1776690779512.jpg" style="cursor: pointer;">
+      <h3 class="" style="cursor: text;">Bath &amp; Brush</h3>
+      <p class="" style="cursor: text;">We’re here to make your pets look and feel their best.</p>
+    </div>
+    <div class="service-card">
+      <img src="images/img_3.1776690779512.jpg" style="cursor: pointer;">
+      <h3 class="" style="cursor: text;">Puppy Intro</h3>
+      <p class="" style="cursor: text;">📞 Phone:</p>
     </div>
   </div>
 </section>
 
 <!-- GALLERY -->
 <section id="gallery" class="gallery">
-  <h2 class="" style="cursor: text;">Happy Pets</h2>
+  <h2 class="" style="cursor: text;">Contact Us</h2>
   <div class="gallery-grid">
-    <img src="images/img_4.1776424647245.jpg" style="cursor: pointer;">
-    <img src="images/img_5.1776424647245.jpg" style="cursor: pointer;">
-    <img src="images/img_6.1776424647245.jpg" style="cursor: pointer;">
-    <img src="images/img_7.1776424647245.jpg" style="cursor: pointer;">
-    <img src="images/img_8.1776424647245.jpg" style="cursor: pointer;">
-    <img src="images/img_9.1776424647245.jpg" style="cursor: pointer;">
+    <img src="images/img_4.1776690779512.jpg" style="cursor: pointer;">
+    <img src="images/img_5.1776690779512.jpg" style="cursor: pointer;">
+    <img src="images/img_6.1776690779512.jpg" style="cursor: pointer;">
+    <img src="images/img_7.1776690779512.jpg" style="cursor: pointer;">
+    <img src="images/img_8.1776690779512.jpg" style="cursor: pointer;">
+    <img src="images/img_9.1776690779512.jpg" style="cursor: pointer;">
   </div>
 </section>
 
 <!-- CONTACT CTA -->
 <section id="contact" class="contact-cta">
   <h2 class="" style="cursor: text;">Contact Us</h2>
-  <p class="" style="cursor: text;">We’re here to make your pets look and feel their best.</p>
+  <p class="" style="cursor: text;">+353 00 000 0000</p>
 
   <div style="margin-top: 30px; font-size: 1.2rem; line-height: 1.8;">
-    <div style="display: flex;justify-content: center;"><p class="" style="cursor: text;">📞 Phone:</p> <p class="" style="cursor: text;">+353 00 000 0000</p></div>
-    <div style="
-    display: flex;
-    justify-content: center;
-"><p class="" style="cursor: text;">📍 Address:</p><p class="" style="cursor: text;">Main Street, Your Address, Co. , Ireland</p></div>
-    <div style="
-    display: flex;
-    justify-content: center;
-"><p class="" style="cursor: text;">⏰ Hours:</p><p class="" style="cursor: text;">Mon–Sat: 9am – 6pm</p></div>
+    <strong>📞 Phone:</strong> +353 00 000 0000<br>
+    <strong>📍 Address:</strong> Main Street, Your Address, Co. , Ireland<br>
+    <strong>⏰ Hours:</strong> Mon–Sat: 9am – 6pm
   </div>
 
   <button style="margin-top: 35px;">Book Appointment</button>
 </section>
-
 
 <!-- FOOTER -->
 <footer>
@@ -95,11 +115,51 @@
 
 
   <!-- Stripe Payment Modal (hidden by default) -->
-  
-  
+  <div id="stripePaymentModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10000;align-items:center;justify-content:center;">
+    <div style="width:420px;max-width:95%;background:#fff;border-radius:8px;padding:20px;position:relative;">
+      <button id="stripeClose" style="position:absolute;right:10px;top:10px;border:none;background:transparent;font-size:20px;cursor:pointer;">✕</button>
+      <h3 style="margin-top: 0px; cursor: text;" class="">Confirm payment to publish</h3>
+      <div id="paymentMessage" style="margin-bottom:8px;color:#333;font-size:14px;">A monthly subscription is required to publish.</div>
 
-  <!-- Blocker-proof Stripe module (loads from jsDelivr CDN) -->
-  
+      <!-- Stripe Elements mount point -->
+      <div id="payment-element" style="margin-bottom:12px;"></div>
+
+      <div style="display:flex;gap:8px;margin-bottom: 4vh;">
+        <button id="confirmPaymentBtn" style="flex:1;padding:10px;background:#6772e5;color:#fff;border:none;border-radius:6px;cursor:pointer;">Confirm</button>
+        <button id="cancelPaymentBtn" style="flex:1;padding:10px;background:#eee;border:none;border-radius:6px;cursor:pointer;">Cancel</button>
+      </div>
+
+      <div id="paymentError" style="color:#b00020;margin-top:10px;display:none;"></div>
+    </div>
+  </div>
+
+  <script id="RequiredScript">
+document.getElementById("about-btn").onclick = function () {
+  const extra = document.getElementById("extra-text");
+  if (extra.style.display === "none") {
+    extra.style.display = "block";
+    setTimeout(() => extra.style.opacity = "1", 10);
+    this.textContent = "Show Less";
+  } else {
+    extra.style.opacity = "0";
+    setTimeout(() => extra.style.display = "none", 500);
+    this.textContent = "Learn More";
+  }
+};
+
+fetch('/storeFront.html', { method: 'HEAD' })
+  .then(response => {
+    if (response.ok) {
+      document.getElementById('store-link').style.display = 'block';
+    }
+  })
+  .catch(() => {
+    // File doesn't exist — leave it hidden
+  });
+</script>
+
+ 
+    
 
 
-<iframe name="__privateStripeController6731" frameborder="0" allowtransparency="true" scrolling="no" role="presentation" allow="payment *" src="https://js.stripe.com/v3/controller-with-preconnect-2c82e23cf131a7ea931923f0ac2afe2c.html#__shared_params__[version]=dahlia&amp;__shared_params__[light_experiment_assignments]=%7B%22token%22%3A%227fcc46d4-a2c4-41aa-b32d-c102df015016%22%2C%22assignments%22%3A%7B%22link_ewcs_prewarm_experiment_v2%22%3A%22control%22%2C%22react_version_17_v2%22%3A%22control%22%7D%7D&amp;apiKey=pk_test_51SmbYSRqySo1SbUl9zUatOFdeP2eN1jYSDT4gNWFjzDaPLMF4QaeXONAJ9Ii2QVz7Bugnhp11UFCCFyg625JGGGu00uMAvRXJq&amp;apiVersion=2026-03-25.dahlia&amp;stripeJsId=7fcc46d4-a2c4-41aa-b32d-c102df015016&amp;stripeObjId=sobj-804660c5-0e23-4c25-846a-74724d6a579c&amp;firstStripeInstanceCreatedLatency=14&amp;controllerCount=1&amp;isCheckout=false&amp;stripeJsLoadTime=1776424616199&amp;manualBrowserDeprecationRollout=false&amp;mids[guid]=NA&amp;mids[muid]=3037d065-8899-42f2-9838-806341a0c89f020af4&amp;mids[sid]=a10ca2ff-5164-46fa-87f1-8a0fe296069d3140aa&amp;react_version_variant=control&amp;referrer=https%3A%2F%2Fwww.ideago.ie%2FDogGroomer%2FDogGroomer.html&amp;controllerId=__privateStripeController6731" aria-hidden="true" tabindex="-1" style="border-width: medium !important; border-style: none !important; border-color: currentcolor !important; border-image: initial !important; margin: 0px !important; padding: 0px !important; width: 1px !important; min-width: 100% !important; overflow: hidden !important; display: block !important; visibility: hidden !important; position: fixed !important; height: 1px !important; pointer-events: none !important; user-select: none !important;"></iframe><iframe name="__privateStripeMetricsController6730" frameborder="0" allowtransparency="true" scrolling="no" role="presentation" allow="payment *" src="https://js.stripe.com/v3/m-outer-3437aaddcdf6922d623e172c2d6f9278.html#url=https%3A%2F%2Fwww.ideago.ie%2FDogGroomer%2FDogGroomer.html&amp;title=Paws%20%26%20Shine%20Grooming&amp;referrer=https%3A%2F%2Fwww.ideago.ie%2FTemplates&amp;muid=3037d065-8899-42f2-9838-806341a0c89f020af4&amp;sid=a10ca2ff-5164-46fa-87f1-8a0fe296069d3140aa&amp;version=6&amp;preview=false&amp;__shared_params__[version]=dahlia" aria-hidden="true" tabindex="-1" style="border-width: medium !important; border-style: none !important; border-color: currentcolor !important; border-image: initial !important; margin: 0px !important; padding: 0px !important; width: 1px !important; min-width: 100% !important; overflow: hidden !important; display: block !important; visibility: hidden !important; position: fixed !important; height: 1px !important; pointer-events: none !important; user-select: none !important;"></iframe></body></html>
+</body></html>
